@@ -1,0 +1,6 @@
+{
+  "name": "C# Codex",
+  "description": "IDE e compilador profissional de C# com editor de código avançado, execução em tempo real, suporte a entrada interativa, vetores, matrizes, algoritmos matemáticos e gerenciamento de projetos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
