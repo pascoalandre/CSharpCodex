@@ -10,6 +10,7 @@ import { MoreMenuModal } from './components/MoreMenuModal';
 import { UserModal } from './components/UserModal';
 import { ShortcutsModal } from './components/ShortcutsModal';
 import { StorageService } from './services/storageService';
+import { CompilerService } from './services/compilerService';
 import { Project, User, ThemeMode, ExecutionResult, EditorSettings } from './types';
 import { THEMES } from './styles/themes';
 import { CSHARP_TEMPLATES } from './data/csharpExamples';
@@ -166,21 +167,11 @@ export default function App() {
     setIsTerminalOpen(true); // Open terminal output view
 
     try {
-      const response = await fetch('/api/compile-run', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          code,
-          stdin: inputToSend,
-          timeoutMs: 9000,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Erro na chamada do servidor: ${response.statusText}`);
-      }
-
-      const data: ExecutionResult = await response.json();
+      const data: ExecutionResult = await CompilerService.compileAndRun(
+        code,
+        inputToSend,
+        8000
+      );
       setExecutionResult(data);
 
       if (data.success && data.exitCode === 0) {
@@ -198,7 +189,7 @@ export default function App() {
         success: false,
         phase: 'run',
         stdout: '',
-        stderr: `Erro de comunicação: ${err.message}`,
+        stderr: `Erro de comunicação: ${err.message || 'Falha ao conectar ao servidor'}`,
         exitCode: 1,
       });
     } finally {
